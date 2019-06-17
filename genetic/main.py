@@ -1,10 +1,14 @@
+"""
+    
+
+"""
+
 import sys
-sys.path.append('/home/tobias/mygits/python_vis/src')
+sys.path.append('/home/tobias/mygits/python_vis/genetic')
 # error+2d vis
-from my_visualisation import *
-import numpy as np
-from genetic_algorithm import GA
-from background_fn import *
+from vis.PSOVisualization import Particle_2DVis
+from genetic.genetic_algorithm import GA
+from genetic.background_function import *
 
 
 if __name__ == '__main__':
