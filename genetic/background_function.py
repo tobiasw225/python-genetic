@@ -143,20 +143,20 @@ def get_styblinsky_tang(n=5):
     m_size = 2*n
     bg_fn = np.zeros((m_size,m_size))
     vals = np.linspace(-n, n, m_size)
+    f = lambda d: (d ** 4) - (16 * d**2) + (5 * d)
+    f_arr = np.frompyfunc(f, 1, 1)
+
     for i in range(m_size):
         for j in range(m_size):
-            sum = 0.0
-            for z in range(2):
-                sum += (vals[z] ** 4 - 16 * vals[z] + 5 * vals[z])
-            bg_fn[i, j] = sum/2
+            bg_fn[i, j] = np.sum(f_arr(vals))/2
     return vals, bg_fn
 
-bgfunc_dicct = {}
-bgfunc_dicct['square'] = get_xsqr
-bgfunc_dicct['rastrigin'] = get_rastrigin
-bgfunc_dicct['schaffer_f6'] = get_schaffner_f6
-bgfunc_dicct['griewank'] = get_griewank
-bgfunc_dicct['rosenbrock'] = get_rosenbrock
-bgfunc_dicct['eggholder'] = get_eggholder
-bgfunc_dicct['hoelder_table'] = get_hoelder_table
-bgfunc_dicct['eval_styblinsky_tang'] = get_styblinsky_tang
+background_function = {}
+background_function['square'] = get_xsqr
+background_function['rastrigin'] = get_rastrigin
+background_function['schaffer_f6'] = get_schaffner_f6
+background_function['griewank'] = get_griewank
+background_function['rosenbrock'] = get_rosenbrock
+background_function['eggholder'] = get_eggholder
+background_function['hoelder_table'] = get_hoelder_table
+background_function['styblinsky_tang'] = get_styblinsky_tang
