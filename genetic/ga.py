@@ -1,10 +1,5 @@
 import numpy as np
 from scipy.spatial import distance
-
-
-import sys
-sys.path.append('/home/tobias/mygits/python_vis/genetic')
-# error+2d vis
 from vis.PSOVisualization import Particle_2DVis
 from genetic.background_function import *
 
@@ -31,6 +26,9 @@ def eval_square(row: np.ndarray):
     return np.sum(f_arr(row))
 
 
+from scipy.optimize import rosen
+
+
 def eval_rosenbrock(row: np.ndarray):
     """
 
@@ -39,8 +37,8 @@ def eval_rosenbrock(row: np.ndarray):
     """
     assert len(row) == 2
     a = 1. - row[0]
-    b = row[1]- row[0]*row[0]
-    return a*a + b*b*100
+    b = row[1] - row[0]*row[0]
+    return a*a + b*b*100 #rosen(row)#
 
 
 def eval_eggholder(row: np.ndarray):
@@ -49,8 +47,11 @@ def eval_eggholder(row: np.ndarray):
     :param row:
     :return:
     """
-    return -(row[1]+47)*np.sin(np.sqrt(np.abs(row[0]/2+ (row[1]+47))))\
-    -row[0]*np.sin(np.sqrt(np.abs(row[0]-(row[1]+47))))
+    assert len(row) == 2
+    return -(row[1]+47)\
+           * np.sin(np.sqrt(np.abs((row[0]/2) + row[1]+47)))\
+           - row[0]\
+           * np.sin(np.sqrt(np.abs(row[0]-(row[1]+47))))
 
 
 def eval_styblinsky_tang(row: np.ndarray):
@@ -59,7 +60,7 @@ def eval_styblinsky_tang(row: np.ndarray):
     :param row:
     :return:
     """
-    f = lambda d: d**4-(16*d**2)+(5*d)
+    f = lambda d: (d**4)-(16*(d**2))+(5*d)
     f_arr = np.frompyfunc(f, 1, 1)
     return np.sum(f_arr(row))/2
 
@@ -85,7 +86,7 @@ class GA:
         self.swarm = np.random.random((num_particles, dims))
         # [-n, n)
         self.swarm = 2 * max_val * self.swarm - max_val
-        self.func = eval_rastrigin
+        self.func = eval_square
 
     def fitness_of_sub_population(self, sub_pop: list):
         """
@@ -142,15 +143,14 @@ class GA:
         :param weight:
         :return:
         """
-        f = (self.step_size * weight)
+        f = self.step_size * weight
         if np.random.randint(0, 2):
             f *= (-1)
         row[np.random.randint(0, self.dims)] += f
-        # set maximum (so particles can't escape area)
-        for d in range(self.dims):
-            row[d] = min(
-                max(row[d], -self.max_val),
-                self.max_val)
+        return row
+
+    def mutate_flip(self, row: np.ndarray):
+        row = np.flip(row)
         return row
 
     def run(self, max_runs: int,
@@ -170,12 +170,12 @@ class GA:
         if fittest % 2 != 0:
             fittest += 1
 
-        weights = np.linspace(1, 1000, max_runs) / 100
+        weights = np.linspace(1, 10, max_runs) / 100
         weights = np.flip(weights)
 
         for j in range(max_runs):
             target_array[j, :] = self.swarm
-            # choose random subpopulation
+            # choose random sub-population
             sub_pop = np.random.choice(particle_indices,
                                        n_sub_population, replace=False)
 
@@ -184,7 +184,7 @@ class GA:
             diversity = self.diversity_of_sub_population(sub_pop)
             # choose fittest and most diverse elements
             # indices in sub-population.
-            measure = solutions-(1-weights[j]*diversity)
+            measure = solutions+(1-weights[j]*diversity)
             indices = list(np.argpartition(measure,
                                            fittest)[:fittest])
             weakest = fittest//2
@@ -206,20 +206,24 @@ class GA:
 
                 j += 1
 
-        solutions = self.fitness_of_sub_population(particle_indices)
+            # set maximum/ minimum (so particles can't escape area)
+            self.swarm = np.clip(self.swarm, -self.max_val, self.max_val)
+
+        solutions = self.fitness_of_sub_population(list(particle_indices))
+
+
 
 
 if __name__ == '__main__':
     max_runs = 100
     dims = 2
-    num_particles = 10
+    num_particles = 50
     max_val = 5
     func_name = 'rastrigin'
-    print(background_function.keys())
     ga = GA(num_particles=num_particles,
             dims=dims,
             max_val=max_val,
-            step_size=0.005)
+            step_size=0.05)
     target_array = np.zeros((max_runs, num_particles, dims))
 
     ga.run(max_runs=max_runs, target_array=target_array)
