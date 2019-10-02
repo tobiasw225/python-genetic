@@ -1,6 +1,4 @@
-import numpy as np
 from scipy.spatial import distance
-from vis.PSOVisualization import Particle_2DVis
 from genetic.background_function import *
 
 
@@ -211,27 +209,3 @@ class GA:
 
         solutions = self.fitness_of_sub_population(list(particle_indices))
 
-
-
-
-if __name__ == '__main__':
-    max_runs = 100
-    dims = 2
-    num_particles = 50
-    max_val = 5
-    func_name = 'rastrigin'
-    ga = GA(num_particles=num_particles,
-            dims=dims,
-            max_val=max_val,
-            step_size=0.05)
-    target_array = np.zeros((max_runs, num_particles, dims))
-
-    ga.run(max_runs=max_runs, target_array=target_array)
-
-    if dims == 2:
-        vis2d = Particle_2DVis(n=max_val, num_runs=max_runs)
-        values, t_m = background_function[func_name]()
-        vis2d.set_data(target_array, values, t_m)
-        vis2d.plot_contours()
-        vis2d.set_point_size(2.5)
-        vis2d.animate()
