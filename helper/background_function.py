@@ -24,7 +24,7 @@ def get_xsqr(x: np.ndarray,
     x = x ** 2
     for i in range(m_size):
         y[i, :] = x[i] + x
-    return x, y
+    return y
 
 
 def get_rastrigin(x: np.ndarray,
@@ -40,9 +40,11 @@ def get_rastrigin(x: np.ndarray,
     m_size = len(x)
     for i in range(m_size):
         for j in range(m_size):
-            y[i, j]= (x[i] ** 2 - 10 * np.cos(np.pi * x[i]) + 10) \
-                     + (x[j] ** 2 - 10 * np.cos(np.pi * x[j]) + 10)
-    return x, y
+            y[i, j] = (x[i] ** 2 - 10 * np.cos(np.pi * x[i]) + 10) \
+                      + (x[j] ** 2 - 10 * np.cos(np.pi * x[j]) + 10)
+    return y
+
+
 
 
 def get_rosenbrock(x: np.ndarray,
@@ -59,7 +61,7 @@ def get_rosenbrock(x: np.ndarray,
             a = 1. - x[i]
             b = x[j] - x[i] ** 2
             y[i, j] = a * a + b * b * 100.
-    return x, y
+    return y
 
 
 def get_griewank(x: np.ndarray,
@@ -75,7 +77,7 @@ def get_griewank(x: np.ndarray,
         for j in range(m_size):
             prod = (np.cos(x[i] / 0.0000001) + 1) * (np.cos(x[j] / 1) + 1)
             y[i, j] = (1 / 4000) * (x[i] ** 2 - prod + x[j] ** 2 - prod)
-    return x, y
+    return y
 
 
 def get_schaffer_f6(x: np.ndarray,
@@ -91,7 +93,7 @@ def get_schaffer_f6(x: np.ndarray,
         for j in range(m_size):
             y[i, j] = (0.5 - ((np.sin(np.sqrt(x[i] ** 2 + x[j] ** 2)) ** 2 - 0.5) \
                              / (1 + 0.001 * (x[i] ** 2 + x[j] ** 2) ** 2)))
-    return x, y
+    return y
 
 
 def get_eggholder(x: np.ndarray,
@@ -109,7 +111,7 @@ def get_eggholder(x: np.ndarray,
                            * np.sin(np.sqrt(np.abs((x[i_1] / 2) + x[i_2] + 47))) \
                            - x[i_1] \
                            * np.sin(np.sqrt(np.abs(x[i_1] - (x[i_2] + 47))))
-    return x, y
+    return y
 
 
 def get_hoelder_table(x: np.ndarray,
@@ -123,7 +125,7 @@ def get_hoelder_table(x: np.ndarray,
         for i_2 in range(m_size):
             y[i_1, i_2] = -np.abs(np.sin(x[i_1]) * np.cos(x[i_2]) \
                                   * np.exp(np.abs(1 - (np.sqrt(x[i_1] ** 2 + x[i_2] ** 2) / np.pi))))
-    return x, y
+    return y
 
 
 def get_styblinsky_tang(x: np.ndarray,
@@ -141,7 +143,7 @@ def get_styblinsky_tang(x: np.ndarray,
         y[i_1, :] = f_arr(x[i_1])
         for i_2 in range(m_size):
             y[i_1, i_2] += f(x[i_2])
-    return x, y
+    return y
 
 
 background_function = {}
@@ -164,7 +166,7 @@ def generate_2d_background(func_name: str, n: int):
     :return:
     """
     m_size = 2*n
-    bg_fn = np.zeros((m_size,m_size))
+    bg_fn = np.zeros((m_size, m_size))
     vals = np.linspace(-n, n, m_size)
     print(f"background-function: {func_name}")
     return background_function[func_name](vals, bg_fn)
