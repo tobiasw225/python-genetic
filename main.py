@@ -1,19 +1,27 @@
-from genetic.background_function import background_function
-from genetic.genetic_algorithm import run_on_function
-from vis.PSOVisualization import Particle2DVis
+import numpy as np
 
-if __name__ == '__main__':
+from genetic.genetic_algorithm import run_on_function
+from vis.ErrorVis import ErrorVis
+from vis.draw import animate_solutions
+
+if __name__ == "__main__":
     dims = 2
-    n = 100  # ~ value height
-    num_runs = 100
-    num_particles = 10
-    func_name = 'square'
-    solution, target_array = run_on_function(dims, n, num_runs, func_name, num_particles)
-    print(target_array)
-    if dims == 2:
-        vis = Particle2DVis(n=n, num_runs=num_runs, func_name=func_name)
-        # background_function = background_function(func_name, n)
-        # vis.set_background_function(background_function)
-        for i in range(num_runs):
-            # not stopping ?
-            vis.animate(solution=target_array[i, :])
+    n = 10
+    num_runs = 300
+    num_particles = 50
+    step_size = 0.1
+    func_name = "rastrigin"
+    # todo something is still broken
+    solution, min_solution_in_rounds, target_array = run_on_function(
+        dims, n, num_runs, func_name, num_particles, step_size
+    )
+    vis = ErrorVis(
+        interactive=False,
+        log_scale=False,
+        xlim=num_runs,
+        ylim=max(min_solution_in_rounds),
+    )
+    # vis.plot_data(range(num_runs), min_solution_in_rounds)
+    # note: do not use pip install matplotlib in ubuntu, use apt instead
+    # apt-get install tcl-dev tk-dev python-tk python3-tk
+    animate_solutions(dims, n, num_runs, func_name, 10, 10, target_array)

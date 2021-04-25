@@ -10,6 +10,8 @@ I think much has been said about these kind of algorithms and my algorithm is ma
 pip install numpy
 pip install matplotlib
 ```
+
+
 ## Genetic Algorithm
 
 ![GA illustration](genetic-algorithm-example.png)

@@ -1,81 +1,57 @@
+import matplotlib
 import numpy as np
 
 import matplotlib.pyplot as plt
 import warnings
+
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
+matplotlib.use("TkAgg")
 
 
 class ScatterVisualizer:
+    def __init__(self, interactive=False, xlim=0, ylim=0, offset=50, log_scale=False):
+        self.interactive = interactive
+        self.log_scale = log_scale
+        self.offset = offset
+        self.xlim = xlim
+        self.ylim = ylim
 
-    class __ScatterVisualizer:
+        matplotlib.interactive(self.interactive)
 
-        def __init__(self, interactive=False,
-                     xlim=0,
-                     ylim=0,
-                     offset=50,
-                     log_scale=False):
-            self.interactive= interactive
-            self.my_plot = self.fig = self.ax = None
-            if interactive:
-                plt.ion()
-                self.init_me()
-                self.ax.set_xlim(0, xlim)
+        self.fig, self.ax = plt.subplots()
+        self.my_plot = self.ax.scatter([], [])
+        self.my_plot.set_edgecolor("white")
+        self.ax.set_xlim(0, xlim)
+        if self.log_scale:
+            self.ax.set_yscale("log")
 
-            self.log_scale = log_scale
+    def set_title(self, title: str = ""):
+        self.ax.set_title(title)
 
-            if self.log_scale and interactive:
-                self.ax.set_yscale('log')
-            self.offset = offset
-            self.xlim = xlim
-            self.ylim = ylim
+    def set_labels(self, xlabel: str = "x", ylabel: str = "y"):
+        self.ax.set_xlabel(xlabel=xlabel)
+        self.ax.set_ylabel(ylabel=ylabel)
 
-        def init_me(self):
-            self.fig, self.ax = plt.subplots()
-            self.my_plot = self.ax.scatter([], [])
-            self.my_plot.set_edgecolor('white')
+    def set_limits(self, n: int):
+        self.ax.set_xlim(-n, n)
+        self.ax.set_ylim(-n, n)
 
-        def set_vis_title(self,title=""):
-            self.ax.set_title(title)
-
-        def set_labels(self, xlabel="", ylabel=""):
-            self.ax.set_xlabel(xlabel=xlabel)
-            self.ax.set_ylabel(ylabel=ylabel)
-
-        def set_yx_lim(self, x=[],y=[]):
-                """
-
-                :param x:
-                :param y:
-                :return:
-                """
-                self.ax.set_xlim(x[0], x[1])
-                self.ax.set_ylim(y[0], y[1])
-
-        def plot_my_data(self, x, y):
-            """
-
-            :param x:
-            :param y:
-            :return:
-            """
-            self.init_me()
-            self.ax.set_xlim(0, self.xlim)
-            try:
-                self.ax.set_ylim([np.min(y, axis=0)[0]-self.offset,
-                                  np.max(y, axis=0)[0]+self.offset])
-            except IndexError:
-                self.ax.set_ylim([np.min(y, axis=0)-self.offset,
-                                  np.max(y, axis=0)+self.offset])
-            self.set_labels(xlabel="(time)", ylabel="(value)")
-            if self.log_scale:
-                self.ax.set_yscale('log')
-            self.ax.plot(x, y, 'o-')
-
-    instance = None
-
-    def __init__(self, *args, **kwargs):
-        if not ScatterVisualizer.instance:
-            ScatterVisualizer.instance = ScatterVisualizer.__ScatterVisualizer(kwargs)
-
-    def __getattr__(self, name):
-        return getattr(self.instance, name)
+    def plot_data(self, x, y):
+        matplotlib.interactive(False)
+        self.fig, self.ax = plt.subplots()
+        self.my_plot = self.ax.scatter([], [])
+        self.my_plot.set_edgecolor("white")
+        self.ax.set_xlim(0, self.xlim)
+        try:
+            self.ax.set_ylim(
+                [np.min(y, axis=0)[0] - self.offset, np.max(y, axis=0)[0] + self.offset]
+            )
+        except IndexError:
+            self.ax.set_ylim(
+                [np.min(y, axis=0) - self.offset, np.max(y, axis=0) + self.offset]
+            )
+        self.set_labels(xlabel="(time)", ylabel="(value)")
+        if self.log_scale:
+            self.ax.set_yscale("log")
+        self.ax.plot(x, y, "o-")
+        plt.show()

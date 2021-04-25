@@ -11,17 +11,18 @@
 
 from scipy.spatial import distance
 
-from genetic.background_function import background_function
-from genetic.eval_funcs import *
+from genetic.eval_funcs import eval_function
 
 
 class GeneticAlgorithm:
-    def __init__(self,
-                 num_particles: int,
-                 dims: int,
-                 max_val: int,
-                 step_size: float,
-                 func_name: str):
+    def __init__(
+        self,
+        num_particles: int,
+        dims: int,
+        max_val: int,
+        step_size: float,
+        func_name: str,
+    ):
         self.num_particles = num_particles
         self.dims = dims
         self.max_val = max_val
@@ -32,6 +33,7 @@ class GeneticAlgorithm:
         self.swarm = 2 * max_val * self.swarm - max_val
         self.func = eval_function(func_name)
         self.solutions = None
+        self.min_solution_in_rounds = []
 
     def fitness_of_sub_population(self, sub_pop: list):
         """
@@ -41,7 +43,7 @@ class GeneticAlgorithm:
         """
         fitness = []
         for i in sub_pop:
-            fitness.append(self.func(self.swarm[i,:]))
+            fitness.append(self.func(self.swarm[i, :]))
         return fitness
 
     def diversity_of_sub_population(self, sub_pop: list) -> np.array:
@@ -50,6 +52,7 @@ class GeneticAlgorithm:
         :param sub_pop:
         :return:
         """
+
         def diversity(row):
             ds = []
             for j in sub_pop:
@@ -70,7 +73,7 @@ class GeneticAlgorithm:
         """
         # shuffle xx, xy
         xx, xy = np.random.choice([xx, xy], 2)
-        row = self.swarm[xy,:]
+        row = self.swarm[xy, :]
         if self.dims > 2:
             ri = np.random.randint(1, self.dims + 1)
 
@@ -78,7 +81,7 @@ class GeneticAlgorithm:
         elif self.dims == 2:
             # 0, -1 or 1, 0
             i = np.random.randint(0, 2)
-            row[i] = self.swarm[xx, i-1]
+            row[i] = self.swarm[xx, i - 1]
         return row
 
     def mutation(self, row: np.ndarray, weight: np.float64) -> np.ndarray:
@@ -90,22 +93,21 @@ class GeneticAlgorithm:
         """
         f = self.step_size * weight
         if np.random.randint(0, 2):
-            f *= (-1)
+            f *= -1
         row[np.random.randint(0, self.dims)] += f
         return row
 
     def mutate_flip(self, row: np.ndarray):
         return np.flip(row)
 
-    def run(self, max_runs: int,
-            target_array: np.ndarray):
+    def run(self, max_runs: int, target_array: np.ndarray):
         particle_indices = range(self.num_particles)
         # size of random sub-populations.
-        n_sub_population = self.num_particles//2
+        n_sub_population = self.num_particles // 2
         if n_sub_population % 2 != 0:
             n_sub_population += 1
         # number of elements selected each round.
-        fittest = n_sub_population //2
+        fittest = n_sub_population // 2
         if fittest % 2 != 0:
             fittest += 1
 
@@ -115,23 +117,23 @@ class GeneticAlgorithm:
         for j in range(max_runs):
             target_array[j, :] = self.swarm
             # choose random sub-population
-            sub_pop = np.random.choice(particle_indices,
-                                       n_sub_population, replace=False)
+            sub_pop = np.random.choice(
+                particle_indices, n_sub_population, replace=False
+            )
 
             solutions = self.fitness_of_sub_population(sub_pop)
             # print(f"{np.min(solutions):.2f}")
+            self.min_solution_in_rounds.append(np.min(solutions))
             diversity = self.diversity_of_sub_population(sub_pop)
             # choose fittest and most diverse elements
             # indices in sub-population.
-            measure = solutions+(1-weights[j]*diversity)
-            indices = list(np.argpartition(measure,
-                                           fittest)[:fittest])
-            weakest = fittest//2
-            weak_indices = list(np.argpartition(measure,
-                                                -weakest)[-weakest:])
+            measure = solutions + (1 - weights[j] * diversity)
+            indices = list(np.argpartition(measure, fittest)[:fittest])
+            weakest = fittest // 2
+            weak_indices = list(np.argpartition(measure, -weakest)[-weakest:])
             j = 0
             for i in range(0, len(indices), 2):
-                xx, xy = indices[i], indices[i+1]
+                xx, xy = indices[i], indices[i + 1]
                 row = self.crossover(xx, xy)
                 if np.random.randint(0, 2):
                     row = self.mutation(row, weights[j])
@@ -151,14 +153,21 @@ class GeneticAlgorithm:
         self.solutions = self.fitness_of_sub_population(list(particle_indices))
 
 
-def run_on_function(dims: int, n: int, num_runs: int, func_name: str, num_particles: int):
+def run_on_function(
+    dims: int,
+    n: int,
+    num_runs: int,
+    func_name: str,
+    num_particles: int,
+    step_size: float,
+):
     target_array = np.zeros((num_runs, num_particles, dims))
-    # todo something aint right here: the func_name was only passed to the vis, not to the genetic alg.
-    # this is currently set in the constructor (!)
-    ga = GeneticAlgorithm(num_particles=num_particles,
-                          dims=dims,
-                          max_val=n,
-                          step_size=.05,
-                          func_name=func_name)
+    ga = GeneticAlgorithm(
+        num_particles=num_particles,
+        dims=dims,
+        max_val=n,
+        step_size=step_size,
+        func_name=func_name,
+    )
     ga.run(target_array=target_array, max_runs=num_runs)
-    return ga.solutions, target_array
+    return ga.solutions, ga.min_solution_in_rounds, target_array
