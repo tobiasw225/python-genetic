@@ -10,7 +10,9 @@
 # Copyright (c) 2019 Tobias Wenzel
 
 from scipy.spatial import distance
-from helper.eval_funcs import *
+
+from genetic.background_function import background_function
+from genetic.eval_funcs import *
 
 
 class GeneticAlgorithm:
@@ -18,14 +20,8 @@ class GeneticAlgorithm:
                  num_particles: int,
                  dims: int,
                  max_val: int,
-                 step_size: float):
-        """
-
-        :param num_particles:
-        :param dims:
-        :param max_val:
-        :param step_size:
-        """
+                 step_size: float,
+                 func_name: str):
         self.num_particles = num_particles
         self.dims = dims
         self.max_val = max_val
@@ -34,7 +30,8 @@ class GeneticAlgorithm:
         self.swarm = np.random.random((num_particles, dims))
         # [-n, n)
         self.swarm = 2 * max_val * self.swarm - max_val
-        self.func = eval_square
+        self.func = eval_function(func_name)
+        self.solutions = None
 
     def fitness_of_sub_population(self, sub_pop: list):
         """
@@ -98,16 +95,10 @@ class GeneticAlgorithm:
         return row
 
     def mutate_flip(self, row: np.ndarray):
-        row = np.flip(row)
-        return row
+        return np.flip(row)
 
     def run(self, max_runs: int,
             target_array: np.ndarray):
-        """
-
-        :param max_runs:
-        :return:
-        """
         particle_indices = range(self.num_particles)
         # size of random sub-populations.
         n_sub_population = self.num_particles//2
@@ -128,7 +119,7 @@ class GeneticAlgorithm:
                                        n_sub_population, replace=False)
 
             solutions = self.fitness_of_sub_population(sub_pop)
-            print(f"{np.min(solutions):.2f}")
+            # print(f"{np.min(solutions):.2f}")
             diversity = self.diversity_of_sub_population(sub_pop)
             # choose fittest and most diverse elements
             # indices in sub-population.
@@ -157,5 +148,17 @@ class GeneticAlgorithm:
             # set maximum/ minimum (so particles can't escape area)
             self.swarm = np.clip(self.swarm, -self.max_val, self.max_val)
 
-        solutions = self.fitness_of_sub_population(list(particle_indices))
+        self.solutions = self.fitness_of_sub_population(list(particle_indices))
 
+
+def run_on_function(dims: int, n: int, num_runs: int, func_name: str, num_particles: int):
+    target_array = np.zeros((num_runs, num_particles, dims))
+    # todo something aint right here: the func_name was only passed to the vis, not to the genetic alg.
+    # this is currently set in the constructor (!)
+    ga = GeneticAlgorithm(num_particles=num_particles,
+                          dims=dims,
+                          max_val=n,
+                          step_size=.05,
+                          func_name=func_name)
+    ga.run(target_array=target_array, max_runs=num_runs)
+    return ga.solutions, target_array

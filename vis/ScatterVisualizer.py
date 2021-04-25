@@ -2,20 +2,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import warnings
-import sys
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
-
-# __filename__: my_visualilation.py
-#
-# __description__: contains Scatter_Visualizer, a simple scatter plot class
-#
-# also: variables for 'print'
-# __remark__:
-#
-# __todos__: stop vis when stopping!
-#
-# Created by Tobias Wenzel in September 2017
-# Copyright (c) 2017 Tobias Wenzel
 
 
 class ScatterVisualizer:

@@ -36,7 +36,7 @@ class ErrorVis(ScatterVisualizer):
         xvals = er_array[::2]
         yvals = er_array[1::2]
 
-        ## did work but not anymore ;(
+        # todo fix
         # if len(yvals) and self.line_combine:
         #     self.ax.add_line(Line2D([er_array[-1][0], x],
         #                             [er_array[-1][1], y],
