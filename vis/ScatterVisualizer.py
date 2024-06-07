@@ -1,8 +1,8 @@
-import matplotlib
-import numpy as np
-
-import matplotlib.pyplot as plt
 import warnings
+
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
 
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
 matplotlib.use("TkAgg")

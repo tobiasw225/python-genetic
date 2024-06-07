@@ -2,13 +2,18 @@ import numpy as np
 
 
 def eval_rastrigin(row: np.ndarray):
-    func = lambda d: d ** 2 - 10 * np.cos(np.pi * d) + 10
-    f_arr = np.frompyfunc(func, 1, 1)
+    def _func(d):
+        return d**2 - 10 * np.cos(np.pi * d) + 10
+
+    f_arr = np.frompyfunc(_func, 1, 1)
     return np.sum(f_arr(row))
 
 
 def eval_square(row: np.ndarray):
-    f_arr = np.frompyfunc(lambda d: d ** 2, 1, 1)
+    def _func(d):
+        return d**2
+
+    f_arr = np.frompyfunc(_func, 1, 1)
     return np.sum(f_arr(row))
 
 
@@ -32,8 +37,11 @@ def eval_styblinsky_tang(row: np.ndarray):
     :param row:
     :return:
     """
-    f = lambda d: (d ** 4) - (16 * (d ** 2)) + (5 * d)
-    f_arr = np.frompyfunc(f, 1, 1)
+
+    def _func(d):
+        return (d**4) - (16 * (d**2)) + (5 * d)
+
+    f_arr = np.frompyfunc(_func, 1, 1)
     return np.sum(f_arr(row)) / 2
 
 

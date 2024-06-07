@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
 
-import time
-
 from genetic.background_function import background_function
 from vis.ScatterVisualizer import ScatterVisualizer
 
