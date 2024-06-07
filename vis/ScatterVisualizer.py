@@ -9,7 +9,7 @@ matplotlib.use("TkAgg")
 
 
 class ScatterVisualizer:
-    def __init__(self, interactive=False, xlim=0, ylim=0, offset=50, log_scale=False):
+    def __init__(self, interactive=False, xlim=0, ylim=0, offset=1, log_scale=False):
         self.interactive = interactive
         self.log_scale = log_scale
         self.offset = offset
