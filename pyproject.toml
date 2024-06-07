@@ -9,7 +9,5 @@ packages = [{include = "genetic"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 pytest = "8.1.1"
-<<<<<<< Updated upstream
-=======
 numpy ="1.26.4"
->>>>>>> Stashed changes
+scipy = "1.13.1"
