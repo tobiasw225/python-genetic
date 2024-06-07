@@ -2,13 +2,10 @@
 #
 # __description__: methods for ga
 #
-# __remark__:
-#
-# __todos__:
-#
 # Created by Tobias Wenzel in ~ Summer 2019
 # Copyright (c) 2019 Tobias Wenzel
 
+import numpy as np
 from scipy.spatial import distance
 
 from genetic.eval_funcs import eval_function

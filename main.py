@@ -1,8 +1,6 @@
-import numpy as np
-
 from genetic.genetic_algorithm import run_on_function
-from vis.ErrorVis import ErrorVis
 from vis.draw import animate_solutions
+from vis.ErrorVis import ErrorVis
 
 if __name__ == "__main__":
     dims = 2

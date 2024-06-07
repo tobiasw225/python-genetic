@@ -8,7 +8,7 @@ import numpy as np
 
 def get_xsqr(x: np.ndarray, y: np.ndarray):
     m_size = len(x)
-    x = x ** 2
+    x = x**2
     for i in range(m_size):
         y[i, :] = x[i] + x
     return y
@@ -95,13 +95,16 @@ def get_styblinsky_tang(x: np.ndarray, y: np.ndarray):
     """
     @todo fix
     """
+
+    def _func(d):
+        return (d**4) - (16 * (d**2)) + (5 * d)
+
     m_size = len(x)
-    f = lambda d: (d ** 4) - (16 * (d ** 2)) + (5 * d)
-    f_arr = np.frompyfunc(f, 1, 1)
+    f_arr = np.frompyfunc(_func, 1, 1)
     for i_1 in range(m_size):
         y[i_1, :] = f_arr(x[i_1])
         for i_2 in range(m_size):
-            y[i_1, i_2] += f(x[i_2])
+            y[i_1, i_2] += _func(x[i_2])
     return y
 
 
