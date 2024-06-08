@@ -45,7 +45,7 @@ def eval_styblinsky_tang(row: np.ndarray):
     return np.sum(f_arr(row)) / 2
 
 
-def eval_hoelder_table(x: np.ndarray) -> np.float:
+def eval_hoelder_table(x: np.ndarray):
     assert len(x) == 2
     return np.abs(
         np.sin(x[0])
@@ -54,13 +54,13 @@ def eval_hoelder_table(x: np.ndarray) -> np.float:
     )
 
 
-def eval_griewank(x: np.ndarray) -> np.float:
+def eval_griewank(x: np.ndarray):
     assert len(x) == 2
     prod = (np.cos(x[0] / 0.0000001) + 1) * (np.cos(x[1] / 1) + 1)
     return (1 / 4000) * (x[0] ** 2 - prod + x[1] ** 2 - prod)
 
 
-def eval_schaffer_f6(x: np.ndarray) -> np.float:
+def eval_schaffer_f6(x: np.ndarray):
     assert len(x) == 2
     return 0.5 - (
         (np.sin(np.sqrt(x[0] ** 2 + x[1] ** 2)) ** 2 - 0.5)

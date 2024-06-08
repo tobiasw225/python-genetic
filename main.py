@@ -1,25 +1,27 @@
-from genetic.genetic_algorithm import run_on_function
-from vis.draw import animate_solutions
-from vis.ErrorVis import ErrorVis
+import numpy as np
+
+from genetic.genetic_algorithm import GeneticAlgorithm
+from vis.visualization import animate
 
 if __name__ == "__main__":
     dims = 2
-    n = 10
-    num_runs = 300
-    num_particles = 50
-    step_size = 0.1
+    n = 50
+    num_runs = 50
+    num_particles = 150
+    step_size = 0.01
     func_name = "rastrigin"
-    # todo something is still broken
-    solution, min_solution_in_rounds, target_array = run_on_function(
-        dims, n, num_runs, func_name, num_particles, step_size
+    target_array = np.zeros((num_runs, num_particles, dims))
+    ga = GeneticAlgorithm(
+        num_particles=num_particles,
+        dims=dims,
+        max_val=n,
+        step_size=step_size,
+        func_name=func_name,
+        max_runs=num_runs,
     )
-    vis = ErrorVis(
-        interactive=False,
-        log_scale=False,
-        xlim=num_runs,
-        ylim=max(min_solution_in_rounds),
-    )
-    # vis.plot_data(range(num_runs), min_solution_in_rounds)
-    # note: do not use pip install matplotlib in ubuntu, use apt instead
-    # apt-get install tcl-dev tk-dev python-tk python3-tk
-    animate_solutions(dims, n, num_runs, func_name, 10, 10, target_array)
+    ga.run(target_array=target_array)
+    print(f"Solutions: {ga.solutions}")
+    print(f"Best solutions {ga.min_solution_in_rounds}")
+    print(f"Best solution {min(ga.min_solution_in_rounds)}")
+    # todo something is still of here: IndexError: index 50 is out of bounds for axis 0 with size 50
+    animate(solutions=target_array, n=n, func_name=func_name)
