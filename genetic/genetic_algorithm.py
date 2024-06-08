@@ -94,7 +94,7 @@ class GeneticAlgorithm:
             particle_indices, self.n_sub_population, replace=False
         )
         solutions = self.fitness_of_population(sub_pop)
-        print(f"{np.min(solutions):.2f}")
+        # print(f"{np.min(solutions):.2f}")
         self.min_solution_in_rounds.append(np.min(solutions))
         diversity = self.diversity_of_sub_population(sub_pop)
         # choose fittest and most diverse elements
