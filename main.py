@@ -7,7 +7,7 @@ if __name__ == "__main__":
     dims = 2
     n = 50
     num_runs = 50
-    num_particles = 150
+    num_particles = 10
     step_size = 0.01
     func_name = "rastrigin"
     target_array = np.zeros((num_runs, num_particles, dims))
