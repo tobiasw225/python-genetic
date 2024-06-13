@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "genetic_algorithm"
+name = "genetic"
 authors =  ["Tobias Wenzel <atobiasw225@gmail.com>"]
 description = "Fun implementation of genetic algorithm"
 version = "0.0.1"
