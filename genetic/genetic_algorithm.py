@@ -47,10 +47,10 @@ class GeneticAlgorithm:
         weights = np.linspace(1, 10, max_runs) / 100
         self.weights = np.flip(weights)
 
-    def fitness_of_population(self, sub_pop: list):
+    def fitness_of_population(self, sub_pop: list) -> list:
         return [self.func(self.swarm[i, :]) for i in sub_pop]
 
-    def diversity_of_sub_population(self, sub_pop: list) -> np.array:
+    def diversity_of_sub_population(self, sub_pop: np.array) -> np.array:
         def diversity(row):
             return np.sum([distance.cosine(row, self.swarm[j, :]) for j in sub_pop])
 

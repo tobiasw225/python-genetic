@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "genetic_algorithm"
+name = "genetic"
 authors =  ["Tobias Wenzel <atobiasw225@gmail.com>"]
 description = "Fun implementation of genetic algorithm"
 version = "0.0.1"
@@ -11,3 +11,4 @@ python = "^3.11"
 pytest = "8.1.1"
 numpy ="1.26.4"
 scipy = "1.13.1"
+pytest-cov = "^5.0.0"
