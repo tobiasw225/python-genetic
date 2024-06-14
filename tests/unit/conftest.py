@@ -31,7 +31,7 @@ def pseudo_random_swarm():
 
 
 @pytest.fixture
-def ga(pseudo_random_swarm):
+def ga(pseudo_random_swarm, seed):
     ga = GeneticAlgorithm(
         num_particles=10,
         dims=2,
@@ -40,5 +40,6 @@ def ga(pseudo_random_swarm):
         func_name="rastrigin",
         max_runs=50,
     )
+    seed()
     ga.swarm = pseudo_random_swarm
     return ga

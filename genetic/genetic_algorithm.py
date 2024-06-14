@@ -96,9 +96,7 @@ class GeneticAlgorithm:
         solutions = self.fitness_of_population(sub_pop)
         # print(f"{np.min(solutions):.2f}")
         self.min_solution_in_rounds.append(np.min(solutions))
-        # breakpoint()
         diversity = self.diversity_of_sub_population(sub_pop)
-        # breakpoint()
         # choose fittest and most diverse elements
         # indices in subpopulation.
         measure = solutions + (1 - self.weights[j] * diversity)
