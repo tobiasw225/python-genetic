@@ -15,4 +15,6 @@ $ poetry install
 ```
 
 [main.py](main.py) offers an entry point to play around. 
-To plot the solutions, you need to install matplotlib.
+To plot the solutions, you install the visualisation dependencies `poetry install --with vis`.
+
+To execute the tests, install the test dependencies `poetry install --with vis --with tests`.
