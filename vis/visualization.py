@@ -1,5 +1,6 @@
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
+
 from vis.background_function import generate_2d_background
 
 
